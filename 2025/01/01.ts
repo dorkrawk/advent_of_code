@@ -13,28 +13,34 @@ let zeroCount = 0;
 function rotate(instruction: string, currentPos: number): number {
   let direction = instruction[0];
   let count = instruction.slice(1);
+  let startingPos = currentPos;
   if (direction === "R") {
     currentPos += parseInt(count);
-    if (currentPos > max) {
-      currentPos = currentPos % totalPositions;
-    }
+    zeroCount = zeroCount + (Math.floor(currentPos / totalPositions) - Math.floor(startingPos / totalPositions));
+    currentPos = currentPos % totalPositions;
   } else {
     currentPos -= parseInt(count);
+    zeroCount = zeroCount + (Math.floor((startingPos - 1) / totalPositions) - Math.floor((currentPos - 1) / totalPositions));
+    
+    currentPos = currentPos % totalPositions;
     if (currentPos < 0) {
-      currentPos = currentPos % totalPositions;
+      currentPos += totalPositions;
     }
   }
+  console.log("pos: ", currentPos);
   return currentPos;
 }
 
 const lines = input.trim().split(/\r?\n/);
 
+console.log("pos: ", pos);
 lines.forEach(line => {
   pos = rotate(line, pos);
-  console.log(pos);
-  if (pos === 0) {
-    zeroCount++;
-  }
+  // console.log("pos: ", pos);
+  // if (pos === 0) {
+  //   zeroCount++;
+  // }
 });
 
+console.log("");
 console.log("zeroCount:", zeroCount);
